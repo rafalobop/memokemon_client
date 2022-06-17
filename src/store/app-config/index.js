@@ -2,11 +2,14 @@
 export default {
     state: {
       usuarios: [],
-      loading: false
+      loading: false,
+      loggedUser: false
     },
     getters: {},
     mutations: {
-      
+      loggedUser(state, value) {
+        state.loggedUser = value;
+      },   
       saveUsuarios(state, value) {
         state.usuarios = value;
       },      

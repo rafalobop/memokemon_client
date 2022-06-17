@@ -1,13 +1,18 @@
 <template>
   <div class="navbar-container">
-    <nav>
-      <ul class="menu">
-        <li><a href="#!">Home</a></li>
-        <li><a href="#!">About</a></li>
-        <li><a href="#!">Contact</a></li>
-        <li><a href="#!">Faq</a></li>
-      </ul>
-    </nav>
+    <b-navbar toggleable="lg" type="dark" variant="secondary">
+      <b-navbar-brand href="/home"
+        ><img src="../assets/logo_memokemon.png" width="100" class="p-2" alt=""
+      /></b-navbar-brand>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-collapse id="nav-collapse" class="justify-content-end p-4" is-nav>
+        <b-navbar-nav class="flex-end mr-0">
+          <b-nav-item href="#">Ranking</b-nav-item>
+          <b-nav-item href="#">Cards</b-nav-item>
+          <b-nav-item href="#" @click="logout">Cerrar sesión</b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
   </div>
 </template>
 <script>
@@ -16,103 +21,14 @@ export default {
   data() {
     return {};
   },
+  methods:{
+      logout(){
+          localStorage.clear()
+          this.$store.commit('loggedUser', false)
+          this.$router.push('/')
+      }
+  }
 };
 </script>
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-}
-
-.clear {
-  clear: both;
-}
-
-.slide-toggle {
-  display: none;
-}
-
-.slidemenu {
-  font-family: arial, sans-serif;
-  max-width: 600px;
-  margin: 50px auto;
-  overflow: hidden;
-}
-
-.slidemenu label {
-  width: 25%;
-  text-align: center;
-  display: block;
-  float: left;
-  color: #333;
-  opacity: 0.2;
-}
-
-.slidemenu label:hover {
-  cursor: pointer;
-  color: #666;
-}
-
-.slidemenu label span {
-  display: block;
-  padding: 10px;
-}
-
-.slidemenu label .icon {
-  font-size: 20px;
-  border: solid 2px #333;
-  text-align: center;
-  height: 50px;
-  width: 50px;
-  display: block;
-  margin: 0 auto;
-  line-height: 50px;
-  border-radius: 50%;
-}
-
-/*Bar Style*/
-
-.slider {
-  width: 50%;
-  height: 5px;
-  display: block;
-  background: #ccc;
-  margin-top: 10px;
-  border-radius: 5px;
-  margin: 0;
-}
-
-.slider .bar {
-  width: 50%;
-  height: 5px;
-  background: #333;
-  border-radius: 5px;
-}
-
-/*Animations*/
-.slidemenu label,
-.slider .bar {
-  transition: all 500ms ease-in-out;
-  -webkit-transition: all 500ms ease-in-out;
-  -moz-transition: all 500ms ease-in-out;
-}
-
-/*Toggle*/
-
-.slidemenu .slide-toggle:checked + label {
-  opacity: 1;
-}
-
-.slidemenu #slide-item-1:checked ~ .slider .bar {
-  margin-left: 0;
-}
-.slidemenu #slide-item-2:checked ~ .slider .bar {
-  margin-left: 25%;
-}
-.slidemenu #slide-item-3:checked ~ .slider .bar {
-  margin-left: 50%;
-}
-.slidemenu #slide-item-4:checked ~ .slider .bar {
-  margin-left: 75%;
-}
 </style>

@@ -222,6 +222,7 @@ export default {
             localStorage.setItem("user", JSON.stringify(resp.data.user));
             localStorage.setItem("token", resp.data.token);
             this.$router.push('/home')
+            this.$store.commit('loggedUser', true)
           } else {
             this.errorToast(resp.data.msg);
             this.$store.commit("changeLoading", false);
