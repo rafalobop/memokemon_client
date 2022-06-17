@@ -1,6 +1,42 @@
 <template>
   <div class="login-main-container">
-    <div class="login-container" v-if="newUser === false">
+    <div
+      class="login-container"
+      v-if="newUser === false && passwordForget === true"
+    >
+      <div class="img-container">
+        <img
+          alt="memokemon img"
+          src="../assets/logo_memokemon.png"
+          class="welcome-img"
+        />
+      </div>
+      <b-form class="login-form">
+        <b-form-group
+          class="form-control text-start border-0 bg-transparent"
+          label="Ingresa tu email para recuperar tu password"
+          label-for="emailForgot"
+        >
+          <b-form-input
+            id="emailForgot"
+            v-model="emailForgot"
+            type="email"
+            placeholder="Ingrese su email"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <button @click="restorePass" class="login-button mt-3 p-3">
+          Reestablecer contraseña
+        </button>
+        <a href="#" @click="forgotedPass()" class="text-decoration-none"
+          >Volver al login</a
+        >
+      </b-form>
+    </div>
+    <div
+      class="login-container"
+      v-if="newUser === false && passwordForget === false"
+    >
       <div class="img-container">
         <img
           alt="memokemon img"
@@ -35,6 +71,12 @@
             required
           ></b-form-input>
         </b-form-group>
+        <p class="text-end small">
+          Olvidaste tu contraseña? Recuperala
+          <a href="#" @click="forgotedPass()" class="text-decoration-none"
+            >Aquí</a
+          >
+        </p>
         <button @click="login" class="login-button mt-3 p-3">
           Iniciar sesión
         </button>
@@ -46,7 +88,10 @@
         >
       </p>
     </div>
-    <div class="login-container" v-else>
+    <div
+      class="login-container"
+      v-if="newUser === true && passwordForget === false"
+    >
       <div class="img-container">
         <img
           alt="memokemon img"
@@ -149,10 +194,13 @@ export default {
       newUserMail: "",
       newUserPass: "",
       newUserPassRepeat: "",
+      passwordForget: false,
+      emailForgot: "",
     };
   },
   methods: {
     async login(e) {
+      this.$store.commit("changeLoading", true);
       e.preventDefault();
       if (this.usermail !== "" && this.userpass !== "") {
         const config = {
@@ -169,23 +217,30 @@ export default {
         try {
           const resp = await axios(config);
           if (resp.data.code === 2) {
-            alert(`${resp.data.msg}`);
+            this.successToast(resp.data.msg);
+            this.$store.commit("changeLoading", false);
+            localStorage.setItem("user", JSON.stringify(resp.data.user));
+            localStorage.setItem("token", resp.data.token);
+            this.$router.push('/home')
           } else {
-            alert(`${resp.data.msg}`);
+            this.errorToast(resp.data.msg);
+            this.$store.commit("changeLoading", false);
           }
         } catch (error) {
-          alert(error.response.data.msg);
+          this.errorToast(error.response.data.msg);
+          this.$store.commit("changeLoading", false);
         }
       } else {
-        alert("debes ingresar usuario y contraseña");
+        this.$store.commit("changeLoading", false);
+        this.warnToast("Debes ingresar usuario y contraseña.");
       }
       return false;
     },
     changeForm() {
       this.newUser = !this.newUser;
     },
-    async register(e) {
-      e.preventDefault();
+    async register() {
+      this.$store.commit("changeLoading", true);
       if (
         this.newUserName !== "" &&
         this.newUserLastName !== "" &&
@@ -194,7 +249,8 @@ export default {
         this.newUserPassRepeat !== ""
       ) {
         if (this.newUserPass !== this.newUserPassRepeat) {
-          alert("Las contraseñas deben coincidir");
+          this.$store.commit("changeLoading", false);
+          this.warnToast("Las contraseñas deben coincidir");
         } else {
           const config = {
             method: "post",
@@ -212,20 +268,82 @@ export default {
           try {
             const resp = await axios(config);
             if (resp.data.code === 2) {
-              alert(`${resp.data.msg}`);
+              this.$store.commit("changeLoading", false);
+              this.successToast(resp.data.msg);
               this.newUserName = "";
               this.newUserLastName = "";
               this.newUserMail = "";
               this.newUserPass = "";
               this.newUserPassRepeat = "";
+              this.newUser = false;
             } else {
-              alert(`${resp.data.msg}`);
+              this.$store.commit("changeLoading", false);
+              this.errorToast(resp.data.msg);
             }
           } catch (error) {
-            alert(error.response.data.msg);
+            this.$store.commit("changeLoading", false);
+            this.errorToast(error.response.data.msg);
           }
         }
+      } else {
+        this.$store.commit("changeLoading", false);
+        this.warnToast("Debes completar todos los campos.");
       }
+      return false;
+    },
+    forgotedPass() {
+      this.passwordForget = !this.passwordForget;
+    },
+    async restorePass() {
+      if (this.emailForgot !== "") {
+        this.$store.commit("changeLoading", true);
+        const config = {
+          method: "post",
+          url: `${backendUrl}/users/forgetpass`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: {
+            email: this.emailForgot,
+          },
+        };
+        try {
+          const resp = await axios(config);
+          if (resp.data.code === 2) {
+            this.$store.commit("changeLoading", false);
+            this.successToast(resp.data.msg);
+            this.passwordForget = false;
+          } else {
+            this.$store.commit("changeLoading", false);
+            this.errorToast(resp.data.msg);
+          }
+        } catch (error) {
+          this.$store.commit("changeLoading", false);
+          this.emailForgot = "";
+          this.errorToast(error.response.data.msg);
+        }
+      } else {
+        this.warnToast("Debe ingresar el email para recuperar su contraseña.");
+      }
+      return false;
+    },
+    successToast(msg) {
+      this.$toast.success(msg, {
+        position: "top-right",
+        hideProgressBar: true,
+      });
+    },
+    errorToast(msg) {
+      this.$toast.error(msg, {
+        position: "top-right",
+        hideProgressBar: true,
+      });
+    },
+    warnToast(msg) {
+      this.$toast.warning(msg, {
+        position: "top-right",
+        hideProgressBar: true,
+      });
     },
   },
 };
