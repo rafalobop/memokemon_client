@@ -5,10 +5,14 @@ export default {
       loading: false,
       loggedUser: false,
       user: {},
-      token:""
+      token:"",
+      cards:[]
     },
     getters: {},
     mutations: {
+      setCards(state,value){
+        state.cards = value
+      },
       setToken(state,value){
         state.token = value
       },
