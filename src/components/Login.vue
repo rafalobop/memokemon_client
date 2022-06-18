@@ -217,12 +217,14 @@ export default {
         try {
           const resp = await axios(config);
           if (resp.data.code === 2) {
-            this.successToast(resp.data.msg);
-            this.$store.commit("changeLoading", false);
             localStorage.setItem("user", JSON.stringify(resp.data.user));
             localStorage.setItem("token", resp.data.token);
+            localStorage.setItem('gameId', resp.data.user.gamesId)
+            this.successToast(resp.data.msg);
+            this.$store.commit("changeLoading", false);
             this.$router.push('/home')
             this.$store.commit('loggedUser', true)
+            this.$store.commit('userLog', resp.data.user)
           } else {
             this.errorToast(resp.data.msg);
             this.$store.commit("changeLoading", false);

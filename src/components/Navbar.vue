@@ -7,9 +7,9 @@
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" class="justify-content-end p-4" is-nav>
         <b-navbar-nav class="flex-end mr-0">
-          <b-nav-item href="#">Ranking</b-nav-item>
-          <b-nav-item href="#">Cards</b-nav-item>
-          <b-nav-item href="#" @click="logout">Cerrar sesión</b-nav-item>
+          <b-nav-item><router-link to="/ranking">Ranking</router-link> </b-nav-item>
+          <b-nav-item><router-link to="/cards">Cards</router-link> </b-nav-item>
+          <b-nav-item @click="logout">Cerrar sesión</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
