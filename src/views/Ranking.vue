@@ -5,8 +5,11 @@
       <div class="user-data-container">
         <h1>Tabla de posiciones</h1>
       </div>
-      <div class="options-container">
+      <div class="options-container" v-if="items.length > 0">
         <b-table striped hover :items="items" :fields="fields"></b-table>
+      </div>
+       <div class="options-container" v-else>
+        <h3>No hay partidas iniciadas aún.</h3>  
       </div>
     </div>
   </div>

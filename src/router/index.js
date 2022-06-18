@@ -2,7 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import login from '../components/Login'
 import home from '../views/Home'
-import ranking from '../views/Ranking.vue'
+import ranking from '../views/Ranking'
+import cards from '../views/Cards'
 
 Vue.use(VueRouter);
 const routes = [
@@ -20,6 +21,11 @@ const routes = [
     path: '/ranking',
     name: 'Ranking',
     component: ranking
+  },
+  {
+    path:'/cards',
+    name:'Cards',
+    component: cards
   }
 
   /* {

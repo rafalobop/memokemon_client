@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="options-container">
-        <div class="btn-container" v-if="!$store.state.appConfig.user.progress">
+        <div class="btn-container" @click="startProgress" v-if="!$store.state.appConfig.user.progress">
           Nueva Partida
         </div>
         <div class="btn-container" v-if="$store.state.appConfig.user.progress">Continuar Partida</div>
@@ -102,6 +102,9 @@ export default {
         this.$store.commit("changeLoading", false);
         this.errorToast(error.response.data.msg);
       }
+    },
+    async startProgress(){
+      alert('Iniciara el juego')
     },
     successToast(msg) {
       this.$toast.success(msg, {
