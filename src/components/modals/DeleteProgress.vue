@@ -10,7 +10,7 @@
     >
       <div class="modal-container">
         <div class="header-modal">
-          <h2>Desea reestablecer su progreso en el juego?</h2>
+          <h2 class="text-center">¿Desea reestablecer su progreso en el juego?</h2>
         </div>
         <div class="modal-options">
           <button class="modalBtn" @click="deleteProgress">Si</button>

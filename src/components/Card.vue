@@ -6,13 +6,12 @@
           :src=card.img
           :alt=card.name
         />
-        <p>{{card.name.toUpperCase()}}</p>
+        <p class="card-title">{{card.name.toUpperCase()}}</p>
       </div>
       <div class="flip-card-front">
        <img
           src="http://vignette1.wikia.nocookie.net/thelorienlegacies/images/2/2c/4129-pokemon-pokeball.png/revision/latest?cb=20140822201518" 
           :alt=card.name
-          
         />
       </div>
     </div>
@@ -51,6 +50,11 @@ export default {
 };
 </script>
 <style scoped>
+.card-title{
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px ;
+}
 .flip-card {
   background-color: transparent;
   margin: 10px 10px;
@@ -81,16 +85,30 @@ export default {
 .flip-card-front {
   background-color: #bbb;
   color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
+  border-radius: 20px;
 }
 .flip-card-back {
-  background-color: dodgerblue;
+  background-color: #494949;
   color: white;
   transform: rotateY(180deg);
+    display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid black;
+  border-radius: 20px;
 }
 .flip-card-back img{
     width: 100%;
 }
 .flip-card-front img{
-    width: 100%;
+    text-align: center;
+    width: 90%;
+    padding: 5px;
 }
 </style>
