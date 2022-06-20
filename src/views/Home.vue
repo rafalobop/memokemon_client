@@ -17,7 +17,7 @@
         <div class="btn-container" @click="startProgress" v-if="!$store.state.appConfig.user.progress">
           Nueva Partida
         </div>
-        <div class="btn-container" v-if="$store.state.appConfig.user.progress">Continuar Partida</div>
+        <div class="btn-container" v-if="$store.state.appConfig.user.progress" @click="continueGame">Continuar Partida</div>
         <div class="btn-container" v-b-modal.restoreProgress @click="modalShow">Borrar Progreso</div>
       </div>
     </div>
@@ -113,7 +113,56 @@ export default {
       }
     },
     async startProgress(){
-      alert('Iniciara el juego')
+      this.$store.commit('changeLoading', true)
+      const token = localStorage.getItem('token')
+      const config = {
+        method: "post",
+        url: `${backendUrl}/games/startProgress`,
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
+      };
+      try {
+        const resp = await axios(config);
+        if (resp.data.code === 2) {
+          this.successToast(resp.data.msg);
+          this.$store.commit("changeLoading", false);
+          this.$router.push('/newGame')
+        } else {
+          this.errorToast(resp.data.msg);
+          this.$store.commit("changeLoading", false);
+        }
+      } catch (error) {
+        this.$store.commit("changeLoading", false);
+        this.errorToast(error.response.data.msg);
+      }
+    },
+    async continueGame(){
+      this.$store.commit('changeLoading', true)
+      const token = localStorage.getItem('token')
+      const config = {
+        method: "get",
+        url: `${backendUrl}/games/continueGame`,
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
+      };
+      try {
+        const resp = await axios(config);
+        if (resp.data.code === 2) {
+          this.successToast(resp.data.msg);
+          this.$store.commit("changeLoading", false);
+          this.$router.push('/newGame')
+        } else {
+          this.errorToast(resp.data.msg);
+          this.$store.commit("changeLoading", false);
+        }
+      } catch (error) {
+        this.$store.commit("changeLoading", false);
+        this.errorToast(error.response.data.msg);
+      }
     },
     successToast(msg) {
       this.$toast.success(msg, {

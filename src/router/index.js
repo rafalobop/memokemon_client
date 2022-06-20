@@ -1,31 +1,37 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import login from '../components/Login'
-import home from '../views/Home'
-import ranking from '../views/Ranking'
-import cards from '../views/Cards'
+import Login from '../components/Login'
+import Home from '../views/Home'
+import Ranking from '../views/Ranking'
+import Cards from '../views/Cards'
+import NewGame from '../views/NewGame'
 
 Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
     name: 'Login',
-    component: login
+    component: Login
   },
   {
     path: '/home',
     name: 'Home',
-    component: home
+    component: Home
   },
   {
     path: '/ranking',
     name: 'Ranking',
-    component: ranking
+    component: Ranking
   },
   {
     path:'/cards',
     name:'Cards',
-    component: cards
+    component: Cards
+  },
+  {
+    path:'/newGame',
+    name: 'NewGame',
+    component: NewGame
   }
 
   /* {
