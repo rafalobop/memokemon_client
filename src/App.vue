@@ -48,16 +48,6 @@ html{
 .welcome-img {
   width: 45%;
 }
-#loadingScreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 10000;
-  background-color: #000000c0;
-}
-/* SPINNER */
 #loading-logo {
   width: 50%;
 }
@@ -74,19 +64,15 @@ html{
   top: 40%;
 }
 .loading {
-  color: #4dcef1;
-  font-size: 70px;
-  margin: 280px auto;
-  width: 1em;
-  height: 1em;
+  position: absolute;
+  left: calc(50% - 35px);
+  top: 50%;
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
-  position: relative;
-  text-indent: -9999em;
-  -webkit-animation: load4 1.3s infinite linear;
-  animation: load4 1.3s infinite linear;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 3px solid transparent;
 }
 .loading .effect-1,
 .loading .effect-2 {
@@ -94,7 +80,7 @@ html{
   width: 100%;
   height: 100%;
   border: 3px solid transparent;
-  border-left: 6px solid #4dcef1;
+  border-left: 3px solid rgba(0, 26, 87, 1);
   border-radius: 50%;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -111,7 +97,7 @@ html{
   width: 100%;
   height: 100%;
   border: 3px solid transparent;
-  border-left: 3px solid #4dcef1;
+  border-left: 3px solid rgba(0, 26, 87, 1);
   -webkit-animation: rotateOpacity 1s ease infinite 0.2s;
   animation: rotateOpacity 1s ease infinite 0.2s;
   border-radius: 50%;
@@ -137,16 +123,11 @@ html{
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
-    color: #2c5db8;
-    border-left: 3px solid #4dcef1;
-
     opacity: 0.1;
   }
   100% {
     -webkit-transform: rotate(1turn);
     transform: rotate(1turn);
-    color: #16244b;
-    border-left: 3px solid #4dcef1;
     opacity: 1;
   }
 }

@@ -1,26 +1,37 @@
 <template>
   <div class="cards-container">
-      <Navbar />
+    <Navbar />
     <div class="cards-main-container">
       <h1>Tarjetas disponibles en el juego</h1>
+    </div>
+    <div class="cards-list align-items-center">
+      <Card
+        v-for="(card) in $store.state.appConfig.cards"
+        :key="card.name"
+        :card="card"
+      />
     </div>
   </div>
 </template>
 <script>
-/* import axios from "axios";
-import { mapState } from "vuex";
-import { backendUrl } from "../config/index"; */
 import Navbar from "../components/Navbar.vue";
+import Card from "../components/Card.vue";
 
 export default {
   name: "Cards",
   components: {
     Navbar,
+    Card,
   },
   data() {
-    return {};
+    return {
+      cards: [],
+    };
   },
-
+  created() {
+    this.cards = this.$store.state.appConfig.cards
+    console.log('cards', this.cards)
+  },
   methods: {
     successToast(msg) {
       this.$toast.success(msg, {
@@ -55,34 +66,14 @@ export default {
   background: #ababab;
   box-shadow: -29px -29px 53px #6a6a6a, 29px 29px 53px #ececec;
 }
-.options-container {
-  margin: 0px auto;
-  padding: 20px;
-  height: 200px;
+.cards-list {
   display: flex;
-  justify-content: space-around;
-  width: 80%;
+  flex-wrap: wrap;
+  padding: 15px;
+  margin: 0px auto;
+  width: 95%;
   border-radius: 37px;
   background: #ababab;
   box-shadow: -29px -29px 53px #6a6a6a, 29px 29px 53px #ececec;
-}
-.btn-container {
-  background: rgb(111, 111, 111);
-  color: #fff;
-  width: 30%;
-  font-size: 20px;
-  letter-spacing: 1.5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 40px;
-  background: #ababab;
-  box-shadow: 9px 9px 13px #848484, -9px -9px 13px #d2d2d2;
-}
-.btn-container:hover {
-  cursor: pointer;
-  border-radius: 40px;
-  background: #ababab;
-  box-shadow: inset 9px 9px 13px #848484, inset -9px -9px 13px #d2d2d2;
 }
 </style>

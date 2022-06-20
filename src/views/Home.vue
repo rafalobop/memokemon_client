@@ -18,7 +18,7 @@
           Nueva Partida
         </div>
         <div class="btn-container" v-if="$store.state.appConfig.user.progress">Continuar Partida</div>
-        <div class="btn-container" @click="deleteProgress">Borrar Progreso</div>
+        <div class="btn-container" v-b-modal.restoreProgress @click="modalShow">Borrar Progreso</div>
       </div>
     </div>
     <div class="home-container" v-else>
@@ -29,22 +29,26 @@
         Vuelve al login para iniciar sesión <a href="/">Aquí</a>
       </p>
     </div>
+    <DeleteProgress :modalShow="modalShow" :deleteProgress="deleteProgress"/>
   </div>
 </template>
 <script>
 import axios from "axios";
 import { backendUrl } from "../config/index";
 import Navbar from "../components/Navbar.vue";
+import DeleteProgress from '../components/modals/DeleteProgress.vue'
 import { mapState } from "vuex";
 
 export default {
   name: "Home",
   components: {
     Navbar,
+    DeleteProgress
   },
   data() {
     return {
       userLogged: {},
+      modalShow: false
     };
   },
   created() {
@@ -53,6 +57,7 @@ export default {
   },
   methods: {
     async deleteProgress() {
+
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("gameId");
       this.$store.commit("changeLoading", true);
@@ -69,7 +74,6 @@ export default {
         if (resp.data.code === 2) {
           this.successToast(resp.data.msg);
           this.$store.commit("changeLoading", false);
-
           const userResp = await axios({
             method: "get",
             url: `${backendUrl}/users/getUserInfo/${id}`,
@@ -88,17 +92,22 @@ export default {
               this.$store.commit('userLog', userResp.data.user)
               this.userLogged = userResp.data.user
               console.log('userrr', this.$store.state.appConfig.user)
+            }else{
+              this.modalShow = !this.modalShow
+
             }
           } catch (error) {
             this.errorToast(resp.data.msg);
             this.$store.commit("changeLoading", false);
+            this.modalShow = !this.modalShow
           }
-
         } else {
           this.errorToast(resp.data.msg);
+          this.modalShow = !this.modalShow
           this.$store.commit("changeLoading", false);
         }
       } catch (error) {
+        this.modalShow = !this.modalShow
         this.$store.commit("changeLoading", false);
         this.errorToast(error.response.data.msg);
       }

@@ -55,7 +55,6 @@ export default {
             }
             this.fields = ["name", "lastName", "levelActual", "score", "position"]
             this.$store.commit("changeLoading", false);
-            console.log('items', this.items)
           } else {
             this.errorToast(resp.data.msg);
             this.$store.commit("changeLoading", false);
@@ -68,7 +67,6 @@ export default {
     },
     createTable(){
         this.items = this.users
-        console.log('items', this.items)
     },
     successToast(msg) {
       this.$toast.success(msg, {

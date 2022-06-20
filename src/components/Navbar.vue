@@ -13,27 +13,26 @@
           <b-nav-item
             ><router-link class="navbutton" to="/cards">Cards</router-link>
           </b-nav-item>
-          <b-nav-item class="logoutbtn" @click="logout"
+          <b-nav-item class="logoutbtn" v-b-modal.cerrar-sesion @click="modalShow = !modalShow"
             >Cerrar sesión</b-nav-item
           >
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
+    <LogoutModal :modalShow="modalShow"/>
   </div>
 </template>
 <script>
-export default {
+import LogoutModal from './modals/LogoutModal.vue'
+export default{
+  components: { LogoutModal },
   name: "Navbar",
   data() {
-    return {};
+    return {
+      modalShow: false,
+    };
   },
-  methods: {
-    logout() {
-      localStorage.clear();
-      this.$store.commit("loggedUser", false);
-      this.$router.push("/");
-    },
-  },
+  
 };
 </script>
 <style scoped>
