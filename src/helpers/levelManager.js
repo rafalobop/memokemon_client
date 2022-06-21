@@ -3,7 +3,6 @@ const generateLevel = async (cards, level) => {
     if(level > 20){
         level = 20
     }
-    console.log('ASI VA', cardsToCut)
     let cardsForLevel;
     switch (level) {
         case 1:

@@ -42,7 +42,6 @@ export default {
         this.$store.commit("changeLoading", false);
       } catch (error) {
         this.$store.commit("loggedUser", false);
-        console.log("error");
       }
     },
   },

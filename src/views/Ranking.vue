@@ -60,7 +60,6 @@ export default {
             this.$store.commit("changeLoading", false);
           }
       } catch (error) {
-          console.log('err', error)
         this.$store.commit('changeLoading', true)
           this.errorToast(error.response.data.msg)
       }

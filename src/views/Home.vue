@@ -49,7 +49,8 @@ export default {
     return {
       userLogged: {},
       cards:[],
-      modalShow:false
+      modalShow:false,
+
     };
   },
   created() {
@@ -99,11 +100,9 @@ export default {
       try {
         const resp = await axios(config);
         if (resp.data.code === 2) {
-          this.successToast(resp.data.msg);
           this.$store.commit("changeLoading", false);
           this.$router.push({name:'NewGame', params:{level: resp.data.level}})
         } else {
-          this.errorToast(resp.data.msg);
           this.$store.commit("changeLoading", false);
         }
       } catch (error) {
@@ -140,6 +139,7 @@ export default {
                 pos: index
               })
               this.$store.commit('setCards', this.cards)
+              localStorage.setItem('cards',JSON.stringify(this.cards))
               this.$store.commit("changeLoading", false);
             }
           });
@@ -151,7 +151,6 @@ export default {
           );
         }
       } catch (error) {
-        console.log("error", error);
         this.$store.commit("changeLoading", false);
         this.errorToast(
           "Hubo un error al cargar la información, intente nuevamente."

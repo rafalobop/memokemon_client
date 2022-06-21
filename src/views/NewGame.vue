@@ -30,11 +30,13 @@
       </div>
     </div>
     <div class="buttons"></div>
-    <QuitGame :modalShow="modalShow" />
+    <QuitGame />
+    <TimeUp id="timeup" />
   </div>
 </template>
 <script>
 import Card from "../components/Card.vue";
+import TimeUp from "../components/modals/TimeUp";
 import QuitGame from "../components/modals/QuitGame.vue";
 import { generateLevel } from "../helpers/levelManager";
 export default {
@@ -42,16 +44,23 @@ export default {
   components: {
     Card,
     QuitGame,
+    TimeUp,
   },
   data() {
     return {
       timer: null,
       scoreTotal: 0,
-      cards: this.$store.state.appConfig.cards,
+      cards: [],
       levelCards: [],
       modalShow: false,
+      modalTimeShow: false,
       isRunning: true,
       time: 60,
+      levelComplete: false,
+      cardOneSelect: [],
+      cardTwoSelect:[],
+      matches:[],
+      level: null
     };
   },
   created() {
@@ -60,7 +69,7 @@ export default {
   mounted() {
     this.startTimer();
   },
-  props: ["level"],
+  //props: ["level"],
   watch: {
     isRunning(value) {
       if (value) {
@@ -75,23 +84,27 @@ export default {
         if (value > 0 && this.isRunning) {
           setTimeout(() => {
             this.time--;
+            if (this.time === 0) {
+              this.$bvModal.show("timeup");
+            }
           }, 1000);
         }
       },
-      immediate: true, 
+      immediate: true,
     },
   },
   methods: {
     startTimer() {
       this.isRunning = true;
-
     },
     stopTimer() {
       this.isRunning = false;
     },
     async loadLevelData() {
-      const cards = this.$store.state.appConfig.cards;
-      const newCardsArray = cards.sort(() => Math.random() - 0.5);
+      this.cards = JSON.parse(localStorage.getItem('cards'))
+      const user = JSON.parse(localStorage.getItem('user'))
+      this.level = user.progress.levelActual
+      const newCardsArray = this.cards.sort(() => Math.random() - 0.5);
       const cardsOfLevel = await generateLevel(newCardsArray, this.level);
       const cardsOfLevelRepeat = [...cardsOfLevel];
       this.levelCards = [...cardsOfLevel, ...cardsOfLevelRepeat];
@@ -99,7 +112,6 @@ export default {
     quitGame() {
       this.$router.push("/home");
     },
-
   },
 };
 </script>

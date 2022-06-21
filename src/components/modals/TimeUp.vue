@@ -2,19 +2,22 @@
   <div>
     <b-modal
       :body-bg-variant="bgVariant"
-      id="quit-game"
+      id="timeup"
       class="logout-modal"
-      v-model="modalShow"
+      v-model="modalTimeShow"
       hide-footer
       hide-header
+      no-close-on-esc
+      no-close-on-backdrop
     >
       <div class="modal-container">
         <div class="header-modal">
-          <h2 class="text-center">Se perderá todo el progreso. Desea salir de la partida?</h2>
+          <h2 class="text-center">Se acabó el tiempo!</h2>
+          <h3 class="text-center">Deseas volver a intentarlo?</h3>
         </div>
         <div class="modal-options">
-          <button class="modalBtn" @click="exitGame">Si</button>
-          <button class="modalBtn" @click="modalShow = !modalShow">No</button>
+          <button class="modalBtn" @click="resetGame">Si</button>
+          <button class="modalBtn" @click="redirect">No</button>
         </div>
       </div>
     </b-modal>
@@ -27,21 +30,25 @@ export default {
   data() {
     return {
       bgVariant: "dark",
-      modalShow: false
+      modalTimeShow: false
     };
   },
-  //props: ["modalShow"],
 
   methods: {
-    exitGame() {
+    resetGame() {
       this.$store.commit("changeLoading", true);
       try {
-        this.$router.push("/home");
+          setTimeout(() => {
+              window.location.reload()
+          }, 3000);
         this.$store.commit("changeLoading", false);
       } catch (error) {
         this.$store.commit("changeLoading", false);
       }
     },
+    redirect(){
+        this.$router.push('/home')
+    }
   },
 };
 </script>
@@ -69,9 +76,9 @@ export default {
   border-radius: 49px;
   background: #212529;
 }
-h2 {
+h2, h3 {
   color: #a0a0a0;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   font-size: 30px;
 }
 </style>

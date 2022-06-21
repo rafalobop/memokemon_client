@@ -5,6 +5,7 @@ import Home from '../views/Home'
 import Ranking from '../views/Ranking'
 import Cards from '../views/Cards'
 import NewGame from '../views/NewGame'
+import ErrorPage from '../views/ErrorPage'
 
 Vue.use(VueRouter);
 const routes = [
@@ -34,6 +35,11 @@ const routes = [
     name: 'NewGame',
     component: NewGame,
     props:true
+  },
+  {
+    path:'*',
+    name:'Error',
+    component: ErrorPage
   }
 ]
 
