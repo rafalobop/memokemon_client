@@ -30,7 +30,6 @@ export default {
   },
   created() {
     this.cards = this.$store.state.appConfig.cards
-    console.log('cards', this.cards)
   },
   methods: {
     

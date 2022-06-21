@@ -10,7 +10,7 @@
     >
       <div class="modal-container">
         <div class="header-modal">
-          <h2>Se perderá todo el progreso. Desea salir de la partida?</h2>
+          <h2 class="text-center">Se perderá todo el progreso. Desea salir de la partida?</h2>
         </div>
         <div class="modal-options">
           <button class="modalBtn" @click="exitGame">Si</button>

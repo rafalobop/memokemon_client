@@ -31,22 +31,14 @@ export default {
     flipCard(){
       const cards = document.getElementsByClassName('flip-card-inner')
       for (let i = 0; i < cards.length; i++) {
-        cards[i].addEventListener('click', ()=>{
-          cards[i].classList.toggle('flipped')
+        cards[i].addEventListener('mousedown', ()=>{
+          if(cards[i].classList.contains('flipped')){
+            cards[i].classList.remove('flipped')
+          }else{
+            cards[i].classList.toggle('flipped')
+          }
         })        
       }
-      const cardsFlipped = document.getElementsByClassName('flipped')
-      for (let i = 0; i < cardsFlipped.length; i++) {
-        cards[i].addEventListener('click', ()=>{
-          cards[i].classList.remove('flipped')
-        })        
-      }
-      
-      /* cards.forEach(card => {
-        card.addEventListener('click', ()=>{
-          card.classList.toggle('flipped')
-        })
-      }); */
     },
     successToast(msg) {
       this.$toast.success(msg, {

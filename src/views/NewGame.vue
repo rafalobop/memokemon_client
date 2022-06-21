@@ -56,7 +56,6 @@ export default {
   },
   created() {
     this.loadLevelData();
-    //this.startTimer();
   },
   mounted() {
     this.startTimer();
@@ -83,22 +82,9 @@ export default {
     },
   },
   methods: {
-    async startTimer() {
+    startTimer() {
       this.isRunning = true;
-      /* const deadline = new Date().getTime() + 60000;
-      this.timer = setInterval(() => {
-          let now = new Date().getTime();
-          let rest = deadline - now;
-          this.time = Math.floor((rest % (1000 * 60)) / 1000);
-        if (this.time > 0) {
-          this.time--;
-        } else {
-          clearInterval(this.timer);
-        }
-        this.errorToast("Se acabo el tiempo");
-        
-        return this.timer;
-      }, 1000); */
+
     },
     stopTimer() {
       this.isRunning = false;
@@ -114,12 +100,6 @@ export default {
       this.$router.push("/home");
     },
 
-    /*  errorToast(msg) {
-      this.$toast.error(msg, {
-        position: "top-right",
-        hideProgressBar: true,
-      });
-    }, */
   },
 };
 </script>

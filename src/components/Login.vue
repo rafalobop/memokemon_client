@@ -218,7 +218,7 @@ export default {
         try {
           const resp = await axios(config);
           if (resp.data.code === 2) {
-            await this.loadCardsInfo()
+            //await this.loadCardsInfo()
             localStorage.setItem("user", JSON.stringify(resp.data.user));
             localStorage.setItem("token", resp.data.token);
             localStorage.setItem('gameId', resp.data.user.gamesId)
@@ -332,7 +332,7 @@ export default {
       }
       return false;
     },
-     async loadCardsInfo() {
+    /*  async loadCardsInfo() {
       this.$store.commit("changeLoading", true);
 
       const config = {
@@ -378,7 +378,7 @@ export default {
           "Hubo un error al cargar la información, intente nuevamente."
         );
       }
-    },
+    }, */
     successToast(msg) {
       this.$toast.success(msg, {
         position: "top-right",

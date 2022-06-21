@@ -18,7 +18,7 @@
           Nueva Partida
         </div>
         <div class="btn-container" v-if="userLogged.progress" @click="continueGame">Continuar Partida</div>
-        <div class="btn-container" v-b-modal.restoreProgress @click="modalShow">Borrar Progreso</div>
+        <div class="btn-container" v-b-modal.restoreProgress @click="modalShow = !modalShow">Borrar Progreso</div>
       </div>
     </div>
     <div class="home-container" v-else>
@@ -29,7 +29,7 @@
         Vuelve al login para iniciar sesión <a href="/">Aquí</a>
       </p>
     </div>
-    <DeleteProgress :modalShow="modalShow" :deleteProgress="deleteProgress"/>
+    <DeleteProgress />
   </div>
 </template>
 <script>
@@ -48,75 +48,20 @@ export default {
   data() {
     return {
       userLogged: {},
-      modalShow: false
+      cards:[],
+      modalShow:false
     };
   },
   created() {
     this.userLogged = JSON.parse(localStorage.getItem('user'))
-    console.log('userLogged', this.userLogged)
-    console.log('store', this.$store.state.appConfig.user)
+    this.loadCardsInfo()
     
   },
   methods: {
-    async deleteProgress() {
-
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("gameId");
-      this.$store.commit("changeLoading", true);
-      const config = {
-        method: "delete",
-        url: `${backendUrl}/games/deleteProgress/${id}`,
-        headers: {
-          "auth-token": token,
-          "Content-Type": "application/json",
-        },
-      };
-      try {
-        const resp = await axios(config);
-        if (resp.data.code === 2) {
-          this.successToast(resp.data.msg);
-          this.$store.commit("changeLoading", false);
-          const userResp = await axios({
-            method: "get",
-            url: `${backendUrl}/users/getUserInfo/${id}`,
-            headers: {
-              "auth-token": token,
-              "Content-Type": "application/json",
-            },
-          });
-          try {
-            if (userResp.data.code == 2) {
-              this.$store.commit("changeLoading", false);
-              this.successToast("Usuario actualizado correctamente");
-              console.log('user lcal', localStorage.getItem('user'))
-              localStorage.setItem('user', JSON.stringify(userResp.data.user))
-              console.log('user change', localStorage.getItem('user'))
-              this.$store.commit('userLog', userResp.data.user)
-              this.userLogged = userResp.data.user
-              console.log('userrr', this.$store.state.appConfig.user)
-            }else{
-              this.modalShow = !this.modalShow
-
-            }
-          } catch (error) {
-            this.errorToast(resp.data.msg);
-            this.$store.commit("changeLoading", false);
-            this.modalShow = !this.modalShow
-          }
-        } else {
-          this.errorToast(resp.data.msg);
-          this.modalShow = !this.modalShow
-          this.$store.commit("changeLoading", false);
-        }
-      } catch (error) {
-        this.modalShow = !this.modalShow
-        this.$store.commit("changeLoading", false);
-        this.errorToast(error.response.data.msg);
-      }
-    },
     async startProgress(){
       this.$store.commit('changeLoading', true)
       const token = localStorage.getItem('token')
+
       const config = {
         method: "post",
         url: `${backendUrl}/games/startProgress`,
@@ -130,7 +75,7 @@ export default {
         if (resp.data.code === 2) {
           this.successToast(resp.data.msg);
           this.$store.commit("changeLoading", false);
-          this.$router.push({name:'NewGame', params:{level: this.$store.state.appConfig.user.gameProgress.levelActual}})
+          this.$router.push({name:'NewGame', params:{level: this.userLogged.progress.levelActual}})
         } else {
           this.errorToast(resp.data.msg);
           this.$store.commit("changeLoading", false);
@@ -164,6 +109,53 @@ export default {
       } catch (error) {
         this.$store.commit("changeLoading", false);
         this.errorToast(error.response.data.msg);
+      }
+    },
+     async loadCardsInfo() {
+      this.$store.commit("changeLoading", true);
+
+      const config = {
+        method: "get",
+        url: "https://pokeapi.co/api/v2/pokemon/?limit=150&offset=0.",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      try {
+        const resp = await axios(config);
+        if (resp.status === 200) {
+          const pokemons = resp.data.results;
+          pokemons.forEach(async (card, index) => {
+            const respuesta = await axios({
+              method: "get",
+              url: `${card.url}`,
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            if(respuesta.status === 200){
+              this.cards.push({
+                name: card.name,
+                img: respuesta.data.sprites.other.home.front_default,
+                pos: index
+              })
+              this.$store.commit('setCards', this.cards)
+              this.$store.commit("changeLoading", false);
+            }
+          });
+          //return this.cards
+        } else {
+          this.$store.commit("changeLoading", false);
+          this.errorToast(
+            "Hubo un error al cargar la información, intente nuevamente."
+          );
+        }
+      } catch (error) {
+        console.log("error", error);
+        this.$store.commit("changeLoading", false);
+        this.errorToast(
+          "Hubo un error al cargar la información, intente nuevamente."
+        );
       }
     },
     successToast(msg) {

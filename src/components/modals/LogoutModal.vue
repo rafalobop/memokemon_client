@@ -27,9 +27,10 @@ export default {
   data() {
     return {
       bgVariant: "dark",
+      modalShow: false
     };
   },
-  props: ["mensaje", "modalShow"],
+  //  props: ["modalShow"],
 
   methods: {
     logout() {
