@@ -31,56 +31,9 @@ const routes = [
   {
     path:'/newGame',
     name: 'NewGame',
-    component: NewGame
+    component: NewGame,
+    props:true
   }
-
-  /* {
-    path: '/home',
-    component: layout,
-    children: [
-      {
-        name: 'import',
-        path: '/import-file',
-        component: importFile,
-      },
- 
-      {
-        name: 'user',
-        path: '/user',
-        component: user,
-      },
-      {
-        name: 'Proyect',
-        path: '/proyect',
-        component: proyect,
-      },
-      {
-        name: 'Graphic',
-        path: '/graphic',
-        component: graphic,
-      },
-      {
-        name: 'DynamicTable',
-        path: '/dynamic-table',
-        component: dynamicTable,
-      },
-      {
-        name: 'ProyectUser',
-        path: '/proyect-user',
-        component: proyectUser,
-      },
-      {
-        name: 'HourTasks',
-        path: '/tasks',
-        component: hourTasks,
-      },
-      {
-        name: '',
-        path: '/graphic-user',
-        component: GraphicUser,
-      },
-    ],
-  }, */
 ]
 
 const router = new VueRouter({

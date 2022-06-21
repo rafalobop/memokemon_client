@@ -33,6 +33,7 @@ export default {
     console.log('cards', this.cards)
   },
   methods: {
+    
     successToast(msg) {
       this.$toast.success(msg, {
         position: "top-right",

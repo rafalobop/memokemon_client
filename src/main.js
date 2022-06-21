@@ -11,7 +11,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(Toast, {
-  transition: "Vue-Toastification__bounce",
+  transition: "Vue-Toastification__fade",
   maxToasts: 20,
   newestOnTop: true
 });

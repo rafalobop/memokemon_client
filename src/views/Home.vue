@@ -14,10 +14,10 @@
         </div>
       </div>
       <div class="options-container">
-        <div class="btn-container" @click="startProgress" v-if="!$store.state.appConfig.user.progress">
+        <div class="btn-container" @click="startProgress" v-if="!userLogged.progress">
           Nueva Partida
         </div>
-        <div class="btn-container" v-if="$store.state.appConfig.user.progress" @click="continueGame">Continuar Partida</div>
+        <div class="btn-container" v-if="userLogged.progress" @click="continueGame">Continuar Partida</div>
         <div class="btn-container" v-b-modal.restoreProgress @click="modalShow">Borrar Progreso</div>
       </div>
     </div>
@@ -53,6 +53,8 @@ export default {
   },
   created() {
     this.userLogged = JSON.parse(localStorage.getItem('user'))
+    console.log('userLogged', this.userLogged)
+    console.log('store', this.$store.state.appConfig.user)
     
   },
   methods: {
@@ -128,7 +130,7 @@ export default {
         if (resp.data.code === 2) {
           this.successToast(resp.data.msg);
           this.$store.commit("changeLoading", false);
-          this.$router.push('/newGame')
+          this.$router.push({name:'NewGame', params:{level: this.$store.state.appConfig.user.gameProgress.levelActual}})
         } else {
           this.errorToast(resp.data.msg);
           this.$store.commit("changeLoading", false);
@@ -154,7 +156,7 @@ export default {
         if (resp.data.code === 2) {
           this.successToast(resp.data.msg);
           this.$store.commit("changeLoading", false);
-          this.$router.push('/newGame')
+          this.$router.push({name:'NewGame', params:{level: resp.data.level}})
         } else {
           this.errorToast(resp.data.msg);
           this.$store.commit("changeLoading", false);

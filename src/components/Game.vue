@@ -1,47 +1,47 @@
 <template>
-  <div class="newgame-container">
-    <div class="points-container">
-      <div class="level-container">
-        <h2>Level:</h2>
-        <span>{{ level }}</span>
-      </div>
-      <div class="timer-container">
-        <button
-          v-b-modal.quit-game
-          @click="modalShow = !modalShow"
-          title="Salir del juego"
-        >
-          X
-        </button>
-        <span>{{ time }}</span>
-      </div>
-      <div class="score-container">
-        <h2>Score:</h2>
-        <span>{{ scoreTotal }}</span>
-      </div>
+<div class="component-container">
+  <div class="points-container">
+    <div class="level-container">
+      <h2>Level:</h2>
+      <span>{{ level }}</span>
     </div>
-    <div class="game-main-container">
-      <div class="cards-game-container">
-        <Card
-          v-for="card in levelCards"
-          :key="card.pos + Math.random()"
-          :card="card"
-        />
-      </div>
+    <div class="timer-container">
+      <button
+        v-b-modal.quit-game
+        @click="modalShow = !modalShow"
+        title="Salir del juego"
+      >
+        X
+      </button>
+      <span>{{ time }}</span>
     </div>
-    <div class="buttons"></div>
-    <QuitGame :modalShow="modalShow" />
+    <div class="score-container">
+      <h2>Score:</h2>
+      <span>{{ scoreTotal }}</span>
+    </div>
   </div>
+  <div class="game-main-container">
+    <div class="cards-game-container">
+      <Card
+        v-for="card in levelCards"
+        :key="card.pos + Math.random()"
+        :card="card"
+      />
+    </div>
+  </div>
+  <div class="buttons">
+      <h1>buttons</h1>
+  </div>
+  </div>
+
 </template>
 <script>
 import Card from "../components/Card.vue";
-import QuitGame from "../components/modals/QuitGame.vue";
 import { generateLevel } from "../helpers/levelManager";
 export default {
   name: "NewGame",
   components: {
     Card,
-    QuitGame,
   },
   data() {
     return {
@@ -79,7 +79,7 @@ export default {
           }, 1000);
         }
       },
-      immediate: true, 
+      immediate: true,
     },
   },
   methods: {

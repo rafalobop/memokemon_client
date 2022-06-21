@@ -1,6 +1,6 @@
 <template>
-  <div class="flip-card">
-    <div class="flip-card-inner">
+  <div class="flip-card" >
+    <div class="flip-card-inner" @click="flipCard">
       <div class="flip-card-back">
         <img
           :src=card.img
@@ -28,6 +28,26 @@ export default {
   props: ["card"],
 
   methods: {
+    flipCard(){
+      const cards = document.getElementsByClassName('flip-card-inner')
+      for (let i = 0; i < cards.length; i++) {
+        cards[i].addEventListener('click', ()=>{
+          cards[i].classList.toggle('flipped')
+        })        
+      }
+      const cardsFlipped = document.getElementsByClassName('flipped')
+      for (let i = 0; i < cardsFlipped.length; i++) {
+        cards[i].addEventListener('click', ()=>{
+          cards[i].classList.remove('flipped')
+        })        
+      }
+      
+      /* cards.forEach(card => {
+        card.addEventListener('click', ()=>{
+          card.classList.toggle('flipped')
+        })
+      }); */
+    },
     successToast(msg) {
       this.$toast.success(msg, {
         position: "top-right",
@@ -51,15 +71,15 @@ export default {
 </script>
 <style scoped>
 .card-title{
-    font-size: 12px;
+    font-size: 8px;
     font-weight: bold;
     letter-spacing: 1px ;
 }
 .flip-card {
   background-color: transparent;
   margin: 10px 10px;
-  width: 140px;
-  height: 200px;
+  width: 70px;
+  height: 100px;
   border: none;
   perspective: 1000px;
 }
@@ -72,6 +92,9 @@ export default {
   transform-style: preserve-3d;
 }
 .flip-card:hover .flip-card-inner {
+  /* transform: rotateY(180deg); */
+}
+.flipped{
   transform: rotateY(180deg);
 }
 .flip-card-front,
