@@ -1,4 +1,5 @@
 const generateLevel = async (cards, level) => {
+    console.log('entro aqui')
     let cardsToCut = [...cards]
     if(level > 20){
         level = 20

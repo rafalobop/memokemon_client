@@ -83,9 +83,7 @@ export default {
   transition: transform 0.8s;
   transform-style: preserve-3d;
 }
-.flip-card:hover .flip-card-inner {
-  /* transform: rotateY(180deg); */
-}
+
 .flipped{
   transform: rotateY(180deg);
 }

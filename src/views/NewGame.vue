@@ -63,13 +63,14 @@ export default {
       level: null
     };
   },
-  created() {
+  created(){
     this.loadLevelData();
+
   },
   mounted() {
     this.startTimer();
+
   },
-  //props: ["level"],
   watch: {
     isRunning(value) {
       if (value) {
@@ -108,6 +109,7 @@ export default {
       const cardsOfLevel = await generateLevel(newCardsArray, this.level);
       const cardsOfLevelRepeat = [...cardsOfLevel];
       this.levelCards = [...cardsOfLevel, ...cardsOfLevelRepeat];
+      console.log('levelards', this.levelCards)
     },
     quitGame() {
       this.$router.push("/home");

@@ -101,7 +101,7 @@ export default {
         const resp = await axios(config);
         if (resp.data.code === 2) {
           this.$store.commit("changeLoading", false);
-          this.$router.push({name:'NewGame', params:{level: resp.data.level}})
+          this.$router.push('/newGame')
         } else {
           this.$store.commit("changeLoading", false);
         }
