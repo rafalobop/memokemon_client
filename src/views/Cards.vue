@@ -9,6 +9,8 @@
         v-for="(card) in $store.state.appConfig.cards"
         :key="card.name"
         :card="card"
+        
+
       />
     </div>
   </div>
@@ -31,6 +33,7 @@ export default {
   created() {
     this.cards = this.$store.state.appConfig.cards
   },
+ 
   methods: {
     
     successToast(msg) {

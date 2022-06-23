@@ -6,10 +6,18 @@ export default {
       loggedUser: false,
       user: {},
       token:"",
-      cards:[]
+      cards:[],
+      cardOne: [],
+      cardTwo: []
     },
     getters: {},
     mutations: {
+      selectCardOne(state,value){
+        state.cardOne = value
+      },
+      selectCardTwo(state,value){
+        state.cardTwo = value
+      },
       setCards(state,value){
         state.cards = value
       },

@@ -1,17 +1,14 @@
 <template>
-  <div class="flip-card" >
-    <div class="flip-card-inner" @click="flipCard">
-      <div class="flip-card-back">
-        <img
-          :src=card.img
-          :alt=card.name
-        />
-        <p class="card-title">{{card.name.toUpperCase()}}</p>
+  <div class="flip-card" @click="$emit('toggleCard', card)">
+    <div class="flip-card-inner">
+      <div class="flip-card-back" v-show="card.flipped">
+        <img :src="card.img" :alt="card.name" />
+        <p class="card-title">{{ card.name.toUpperCase() }}</p>
       </div>
-      <div class="flip-card-front">
-       <img
-          src="http://vignette1.wikia.nocookie.net/thelorienlegacies/images/2/2c/4129-pokemon-pokeball.png/revision/latest?cb=20140822201518" 
-          :alt=card.name
+      <div class="flip-card-front" v-show="!card.flipped">
+        <img
+          src="http://vignette1.wikia.nocookie.net/thelorienlegacies/images/2/2c/4129-pokemon-pokeball.png/revision/latest?cb=20140822201518"
+          :alt="card.name"
         />
       </div>
     </div>
@@ -23,23 +20,43 @@
 export default {
   name: "Card",
   data() {
-    return {};
+    return {
+      selectedCards: [],
+      cardOne: [],
+      cardTwo: [],
+      cardsClass: [],
+      flipped: false,
+      counterFlipUp: 0,
+      counterFlipDown: 0,
+      counter: 0,
+      //showCard:false
+    };
   },
-  props: ["card"],
+  props: ["card", "isGame", "showCard"],
 
   methods: {
-    flipCard(){
-      const cards = document.getElementsByClassName('flip-card-inner')
-      for (let i = 0; i < cards.length; i++) {
-        cards[i].addEventListener('mousedown', ()=>{
-          if(cards[i].classList.contains('flipped')){
-            cards[i].classList.remove('flipped')
-          }else{
-            cards[i].classList.toggle('flipped')
-          }
-        })        
-      }
-    },
+    /* toggleCard(card) {
+      this.showCard = !this.showCard;
+      card.flipped = !card.flipped
+      return card
+    }, */
+    
+      /* this.levelCards.forEach(el => {
+        console.log('el', el)
+        console.log('card', card)
+        if(el.name === card.name){
+          el.flipped = true
+        }
+        return el
+      })
+      let selected = this.levelCards.filter((c)=> c.flipped = true)
+      console.log('se', selected) */
+      /* let filtered = this.levelCards.map(el => {
+        
+        return el.flipped
+      }); */
+      // console.log('filtered', filtered)
+    // },
     successToast(msg) {
       this.$toast.success(msg, {
         position: "top-right",
@@ -59,13 +76,16 @@ export default {
       });
     },
   },
+  computed:{
+    
+  }
 };
 </script>
 <style scoped>
-.card-title{
-    font-size: 8px;
-    font-weight: bold;
-    letter-spacing: 1px ;
+.card-title {
+  font-size: 8px;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 .flip-card {
   background-color: transparent;
@@ -84,9 +104,6 @@ export default {
   transform-style: preserve-3d;
 }
 
-.flipped{
-  transform: rotateY(180deg);
-}
 .flip-card-front,
 .flip-card-back {
   position: absolute;
@@ -108,20 +125,20 @@ export default {
 .flip-card-back {
   background-color: #494949;
   color: white;
-  transform: rotateY(180deg);
-    display: flex;
+  transform: rotateX(360deg), translateY(-30px);
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border: 2px solid black;
   border-radius: 20px;
 }
-.flip-card-back img{
-    width: 100%;
+.flip-card-back img {
+  width: 100%;
 }
-.flip-card-front img{
-    text-align: center;
-    width: 90%;
-    padding: 5px;
+.flip-card-front img {
+  text-align: center;
+  width: 90%;
+  padding: 5px;
 }
 </style>

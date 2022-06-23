@@ -5,16 +5,7 @@
         <h2>Level:</h2>
         <span>{{ level }}</span>
       </div>
-      <div class="timer-container">
-        <button
-          v-b-modal.quit-game
-          @click="modalShow = !modalShow"
-          title="Salir del juego"
-        >
-          X
-        </button>
-        <span>{{ time }}</span>
-      </div>
+      <!-- <Timer /> -->
       <div class="score-container">
         <h2>Score:</h2>
         <span>{{ scoreTotal }}</span>
@@ -24,8 +15,11 @@
       <div class="cards-game-container">
         <Card
           v-for="card in levelCards"
+          @toggleCard="verifyCard(card)"
           :key="card.pos + Math.random()"
           :card="card"
+          :isGame="isGame"
+          :showCard="showCard"
         />
       </div>
     </div>
@@ -37,79 +31,104 @@
 <script>
 import Card from "../components/Card.vue";
 import TimeUp from "../components/modals/TimeUp";
+//import Timer from '../components/Timer.vue'
 import QuitGame from "../components/modals/QuitGame.vue";
 import { generateLevel } from "../helpers/levelManager";
+
 export default {
   name: "NewGame",
   components: {
     Card,
     QuitGame,
     TimeUp,
+    //Timer
   },
   data() {
     return {
-      timer: null,
       scoreTotal: 0,
       cards: [],
       levelCards: [],
-      modalShow: false,
-      modalTimeShow: false,
-      isRunning: true,
-      time: 60,
       levelComplete: false,
       cardOneSelect: [],
-      cardTwoSelect:[],
-      matches:[],
-      level: null
+      cardTwoSelect: [],
+      matches: [],
+      flipped: [],
+      level: null,
+      isGame: false,
+      showCard: false,
     };
   },
-  created(){
+  created() {
     this.loadLevelData();
-
   },
-  mounted() {
-    this.startTimer();
 
-  },
-  watch: {
-    isRunning(value) {
-      if (value) {
-        setTimeout(() => {
-          this.time--;
-        }, 1000);
+  methods: {
+    verifyCard(card) {
+      card.flipped = !card.flipped;
+      this.showCard = !this.showCard;
+      if (card.flipped) {
+        this.flipped.push(card);
+        if (this.flipped.length === 2) {
+          console.log("aqui deja de suamr");
+
+          if (this.flipped[0] == this.flipped[1]) {
+            console.log("se suma un punto son iguales");
+            this.matches.push(this.flipped[0])
+            this.flipped = []
+          } else {
+            setTimeout(() => {
+              this.flipped.forEach((card)=> card.flipped = false)
+            }, 2000);
+
+          }
+        }
+        /* if (!this.flipped.length) {
+          this.flipped.push(card);
+        } else {
+          this.flipped.push(card)
+          this.cardTwoSelect.push(card);
+          this.flipped.push(this.cardOneSelect,this.cardTwoSelect)
+          console.log('fli', this.flipped) */
+        /* if (this.cardOneSelect[0].name != this.cardTwoSelect[0].name) {
+            console.log('ssss', this.cardOneSelect)
+            console.log('aaa', this.cardTwoSelect)
+            setTimeout(() => {
+              this.cardOneSelect[0].flipped = false;
+              this.cardTwoSelect[0].flipped = false;
+            }, 1500);
+            this.cardOneSelect = [];
+            this.cardTwoSelect = [];
+          } else {
+            console.log("son iguales");
+          } */
+        // /* } */
       }
     },
+    verifyPoints(card1, card2) {
+      console.log("card1", card1);
+      console.log("card2", card2);
 
-    time: {
-      handler(value) {
-        if (value > 0 && this.isRunning) {
-          setTimeout(() => {
-            this.time--;
-            if (this.time === 0) {
-              this.$bvModal.show("timeup");
-            }
-          }, 1000);
-        }
-      },
-      immediate: true,
-    },
-  },
-  methods: {
-    startTimer() {
-      this.isRunning = true;
-    },
-    stopTimer() {
-      this.isRunning = false;
+      if (card1 === card2) {
+        console.log("se suma 1 punto");
+      } else {
+        console.log("suma 1 intento");
+        console.log("cards", this.levelCards);
+        this.cardOneSelect = [];
+        this.cardTwoSelect = [];
+      }
     },
     async loadLevelData() {
-      this.cards = JSON.parse(localStorage.getItem('cards'))
-      const user = JSON.parse(localStorage.getItem('user'))
-      this.level = user.progress.levelActual
+      this.cards = JSON.parse(localStorage.getItem("cards"));
+      const user = JSON.parse(localStorage.getItem("user"));
+      this.level = user.progress.levelActual;
       const newCardsArray = this.cards.sort(() => Math.random() - 0.5);
       const cardsOfLevel = await generateLevel(newCardsArray, this.level);
       const cardsOfLevelRepeat = [...cardsOfLevel];
-      this.levelCards = [...cardsOfLevel, ...cardsOfLevelRepeat];
-      console.log('levelards', this.levelCards)
+      const cardsToCharge = [...cardsOfLevel, ...cardsOfLevelRepeat];
+      this.levelCards = cardsToCharge.map((card) => {
+        return { ...card, flipped: false, acerted: false };
+      });
+      this.isGame = true;
     },
     quitGame() {
       this.$router.push("/home");
@@ -153,35 +172,7 @@ export default {
   font-size: 50px;
   margin-top: -18px;
 }
-.timer-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 53px;
-  padding: 0px 10px;
-  background: #ababab;
-  box-shadow: inset -5px -5px 7px #8c8c8c, inset 5px 5px 7px #cacaca;
-}
-.timer-container button {
-  margin-top: 20px;
-  font-size: 10px;
-  border-radius: 50%;
-  background: #ababab;
-  box-shadow: inset -6px -6px 12px #767676, inset 6px 6px 12px #e0e0e0;
-}
-.timer-container button:hover {
-  transition: 0.3s;
-  border-radius: 50%;
-  color: #454545;
-  background: #ababab;
-  box-shadow: -5px -5px 3px #a1a1a1, 5px 5px 3px #b5b5b5;
-}
-.timer-container span {
-  font-weight: bold;
-  font-size: 50px;
-  padding: 5px;
-}
+
 .cards-game-container {
   display: flex;
   flex-wrap: wrap;
