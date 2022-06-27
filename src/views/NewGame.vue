@@ -5,10 +5,12 @@
         <h2>Level:</h2>
         <span>{{ level }}</span>
       </div>
-     <Timer :levelComplete="levelComplete" />
+      <Timer :levelComplete="levelComplete" />
       <div class="score-container">
         <h2 class="small">Score:</h2>
-        <span class="score-box">{{ levelComplete ? scoreTotal : scoreCounter }}</span>
+        <span class="score-box">{{
+          levelComplete ? scoreTotal : scoreCounter
+        }}</span>
       </div>
     </div>
     <div class="game-main-container">
@@ -23,18 +25,19 @@
       </div>
     </div>
     <QuitGame />
-    <FinishedGame :scoreTotal="scoreTotal"/>
+    <FinishedGame :scoreTotal="scoreTotal" />
     <TimeUp id="timeup" />
-
   </div>
 </template>
 <script>
 import Card from "../components/Card.vue";
 import TimeUp from "../components/modals/TimeUp";
-import FinishedGame from '../components/modals/FinishedGame.vue'
-import Timer from '../components/Timer.vue'
+import FinishedGame from "../components/modals/FinishedGame.vue";
+import Timer from "../components/Timer.vue";
 import QuitGame from "../components/modals/QuitGame.vue";
 import { generateLevel } from "../helpers/levelManager";
+import axios from "axios";
+import { backendUrl } from "../config/index";
 
 export default {
   name: "NewGame",
@@ -43,7 +46,7 @@ export default {
     QuitGame,
     TimeUp,
     Timer,
-    FinishedGame
+    FinishedGame,
   },
   data() {
     return {
@@ -60,16 +63,17 @@ export default {
       scoreCounter: 0,
       movimientosTotales: 100,
       movimientos: 0,
-      levelTime:0
+      levelTime: 0,
+      user:{}
     };
   },
   created() {
     this.loadLevelData();
     const timeRun = setInterval(() => {
-      this.levelTime++
+      this.levelTime++;
     }, 1000);
-    if(this.levelTime == 60 || this.levelComplete){
-      clearInterval(timeRun)
+    if (this.levelTime == 60 || this.levelComplete) {
+      clearInterval(timeRun);
     }
   },
   methods: {
@@ -105,7 +109,7 @@ export default {
             this.cardTwoSelect = [];
             return this.levelCards;
           });
-          this.verifyPoints()
+          this.verifyPoints();
           this.cardOneSelect = [];
           this.cardTwoSelect = [];
         }
@@ -114,19 +118,67 @@ export default {
         this.cardTwoSelect = [];
       }
     },
-    verifyPoints() {
-      this.scoreCounter++
-      if(this.matches.length === this.levelCards.length){
-        this.levelComplete = true
-        this.scoreTotal = (this.scoreCounter*10)+this.movimientosTotales+this.levelTime
-       
+    async verifyPoints() {
+      this.scoreCounter++;
+      if (this.matches.length === this.levelCards.length) {
+        this.levelComplete = true;
+        this.scoreTotal =
+          this.scoreCounter * 10 + this.movimientosTotales + this.levelTime;
+        const token = localStorage.getItem("token");
+
+        const config = {
+          method: "post",
+          url: `${backendUrl}/games/saveGameResult`,
+          headers: {
+            "auth-token": token,
+            "Content-Type": "application/json",
+          },
+          data: {
+            level: this.level,
+            tiempo: this.levelTime,
+            movimientos: this.movimientos,
+            completed: true,
+            score: this.scoreTotal,
+          },
+        };
+        try {
+          const resp = await axios(config);
+          if (resp.data.code === 2) {
+            const config = {
+              method: "get",
+              url: `${backendUrl}/games/continueGame`,
+              headers: {
+                "auth-token": token,
+                "Content-Type": "application/json",
+              },
+            };
+            try {
+              const resp = await axios(config);
+              if (resp.data.code === 2) {
+                localStorage.removeItem('user')
+                localStorage.setItem('user', JSON.stringify(resp.data))
+                this.$store.commit("changeLoading", false);
+                this.$router.push("/newGame");
+              } else {
+                this.$store.commit("changeLoading", false);
+              }
+            } catch (error) {
+              this.$store.commit("changeLoading", false);
+              this.errorToast(error.response.data.msg);
+            }
+          } else {
+            console.log("aqui");
+          }
+        } catch (error) {
+          console.log(error);
+        }
         this.$bvModal.show("finish-game", this.scoreTotal);
       }
     },
     async loadLevelData() {
       this.cards = JSON.parse(localStorage.getItem("cards"));
-      const user = JSON.parse(localStorage.getItem("user"));
-      this.level = user.progress.levelActual;
+      this.user = JSON.parse(localStorage.getItem("user"));
+      this.level = this.user.progress.levelActual;
       const newCardsArray = this.cards.sort(() => Math.random() - 0.5);
       const cardsOfLevel = await generateLevel(newCardsArray, this.level);
       const cardsOfLevelRepeat = [...cardsOfLevel];
@@ -134,6 +186,7 @@ export default {
       this.levelCards = cardsToCharge.map((card) => {
         return { ...card, flipped: false, acerted: false };
       });
+      console.log("se carga el nivel nuevamnete", this.user.progress.levelActual);
       this.isGame = true;
     },
     quitGame() {
