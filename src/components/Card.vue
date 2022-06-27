@@ -1,11 +1,11 @@
 <template>
   <div class="flip-card" @click="$emit('toggleCard', card)">
     <div class="flip-card-inner">
-      <div class="flip-card-back" v-show="card.flipped">
+      <div class="flip-card-back" v-if="card.flipped">
         <img :src="card.img" :alt="card.name" />
         <p class="card-title">{{ card.name.toUpperCase() }}</p>
       </div>
-      <div class="flip-card-front" v-show="!card.flipped">
+      <div class="flip-card-front" v-else>
         <img
           src="http://vignette1.wikia.nocookie.net/thelorienlegacies/images/2/2c/4129-pokemon-pokeball.png/revision/latest?cb=20140822201518"
           :alt="card.name"
@@ -29,34 +29,12 @@ export default {
       counterFlipUp: 0,
       counterFlipDown: 0,
       counter: 0,
-      //showCard:false
     };
   },
-  props: ["card", "isGame", "showCard"],
+  props: ["card", "isGame"],
 
   methods: {
-    /* toggleCard(card) {
-      this.showCard = !this.showCard;
-      card.flipped = !card.flipped
-      return card
-    }, */
-    
-      /* this.levelCards.forEach(el => {
-        console.log('el', el)
-        console.log('card', card)
-        if(el.name === card.name){
-          el.flipped = true
-        }
-        return el
-      })
-      let selected = this.levelCards.filter((c)=> c.flipped = true)
-      console.log('se', selected) */
-      /* let filtered = this.levelCards.map(el => {
-        
-        return el.flipped
-      }); */
-      // console.log('filtered', filtered)
-    // },
+
     successToast(msg) {
       this.$toast.success(msg, {
         position: "top-right",
@@ -76,9 +54,7 @@ export default {
       });
     },
   },
-  computed:{
-    
-  }
+
 };
 </script>
 <style scoped>

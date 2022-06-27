@@ -6,8 +6,9 @@
     </div>
     <div class="cards-list align-items-center">
       <Card
-        v-for="(card) in $store.state.appConfig.cards"
-        :key="card.name"
+        v-for="(card, index) in $store.state.appConfig.cards"
+        @toggleCard="flipCard(card)"
+        :key="index"
         :card="card"
         
 
@@ -30,11 +31,15 @@ export default {
       cards: [],
     };
   },
-  created() {
+  mounted() {
     this.cards = this.$store.state.appConfig.cards
   },
  
   methods: {
+    flipCard(card){
+      console.log('card', card)
+      card.flipped = !card.flipped
+    },
     
     successToast(msg) {
       this.$toast.success(msg, {

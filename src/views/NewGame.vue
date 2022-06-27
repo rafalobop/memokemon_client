@@ -5,33 +5,34 @@
         <h2>Level:</h2>
         <span>{{ level }}</span>
       </div>
-      <!-- <Timer /> -->
+     <Timer :levelComplete="levelComplete" />
       <div class="score-container">
-        <h2>Score:</h2>
-        <span>{{ scoreTotal }}</span>
+        <h2 class="small">Score:</h2>
+        <span class="score-box">{{ levelComplete ? scoreTotal : scoreCounter }}</span>
       </div>
     </div>
     <div class="game-main-container">
       <div class="cards-game-container">
         <Card
-          v-for="card in levelCards"
-          @toggleCard="verifyCard(card)"
-          :key="card.pos + Math.random()"
+          v-for="(card, index) in levelCards"
+          @toggleCard="flipCard(card, index)"
+          :key="index"
           :card="card"
           :isGame="isGame"
-          :showCard="showCard"
         />
       </div>
     </div>
-    <div class="buttons"></div>
     <QuitGame />
+    <FinishedGame :scoreTotal="scoreTotal"/>
     <TimeUp id="timeup" />
+
   </div>
 </template>
 <script>
 import Card from "../components/Card.vue";
 import TimeUp from "../components/modals/TimeUp";
-//import Timer from '../components/Timer.vue'
+import FinishedGame from '../components/modals/FinishedGame.vue'
+import Timer from '../components/Timer.vue'
 import QuitGame from "../components/modals/QuitGame.vue";
 import { generateLevel } from "../helpers/levelManager";
 
@@ -41,7 +42,8 @@ export default {
     Card,
     QuitGame,
     TimeUp,
-    //Timer
+    Timer,
+    FinishedGame
   },
   data() {
     return {
@@ -52,69 +54,73 @@ export default {
       cardOneSelect: [],
       cardTwoSelect: [],
       matches: [],
-      flipped: [],
       level: null,
       isGame: false,
       showCard: false,
+      scoreCounter: 0,
+      movimientosTotales: 100,
+      movimientos: 0,
+      levelTime:0
     };
   },
   created() {
     this.loadLevelData();
+    const timeRun = setInterval(() => {
+      this.levelTime++
+    }, 1000);
+    if(this.levelTime == 60 || this.levelComplete){
+      clearInterval(timeRun)
+    }
   },
-
   methods: {
-    verifyCard(card) {
-      card.flipped = !card.flipped;
-      this.showCard = !this.showCard;
-      if (card.flipped) {
-        this.flipped.push(card);
-        if (this.flipped.length === 2) {
-          console.log("aqui deja de suamr");
+    flipCard(card) {
+      if (!this.cardOneSelect.length) {
+        card.flipped = true;
+        this.cardOneSelect.push(card);
+      } else if (!this.cardTwoSelect.length) {
+        this.movimientosTotales--;
+        card.flipped = true;
+        this.cardTwoSelect.push(card);
 
-          if (this.flipped[0] == this.flipped[1]) {
-            console.log("se suma un punto son iguales");
-            this.matches.push(this.flipped[0])
-            this.flipped = []
-          } else {
-            setTimeout(() => {
-              this.flipped.forEach((card)=> card.flipped = false)
-            }, 2000);
-
-          }
-        }
-        /* if (!this.flipped.length) {
-          this.flipped.push(card);
-        } else {
-          this.flipped.push(card)
-          this.cardTwoSelect.push(card);
-          this.flipped.push(this.cardOneSelect,this.cardTwoSelect)
-          console.log('fli', this.flipped) */
-        /* if (this.cardOneSelect[0].name != this.cardTwoSelect[0].name) {
-            console.log('ssss', this.cardOneSelect)
-            console.log('aaa', this.cardTwoSelect)
-            setTimeout(() => {
-              this.cardOneSelect[0].flipped = false;
-              this.cardTwoSelect[0].flipped = false;
-            }, 1500);
+        if (this.cardOneSelect[0].name != this.cardTwoSelect[0].name) {
+          setTimeout(() => {
             this.cardOneSelect = [];
             this.cardTwoSelect = [];
-          } else {
-            console.log("son iguales");
-          } */
-        // /* } */
-      }
-    },
-    verifyPoints(card1, card2) {
-      console.log("card1", card1);
-      console.log("card2", card2);
-
-      if (card1 === card2) {
-        console.log("se suma 1 punto");
+            this.levelCards.forEach((card) => {
+              if (!card.acerted) {
+                card.flipped = false;
+              }
+            });
+          }, 600);
+          return this.levelCards;
+        } else {
+          this.levelCards.forEach((card) => {
+            if (card.flipped) {
+              card.acerted = true;
+              if (this.matches.indexOf(card) == -1) {
+                this.matches.push(card);
+              }
+            }
+            this.cardOneSelect = [];
+            this.cardTwoSelect = [];
+            return this.levelCards;
+          });
+          this.verifyPoints()
+          this.cardOneSelect = [];
+          this.cardTwoSelect = [];
+        }
       } else {
-        console.log("suma 1 intento");
-        console.log("cards", this.levelCards);
         this.cardOneSelect = [];
         this.cardTwoSelect = [];
+      }
+    },
+    verifyPoints() {
+      this.scoreCounter++
+      if(this.matches.length === this.levelCards.length){
+        this.levelComplete = true
+        this.scoreTotal = (this.scoreCounter*10)+this.movimientosTotales+this.levelTime
+       
+        this.$bvModal.show("finish-game", this.scoreTotal);
       }
     },
     async loadLevelData() {
@@ -169,8 +175,8 @@ export default {
 .level-container span,
 .score-container span {
   margin-left: 10px;
-  font-size: 50px;
-  margin-top: -18px;
+  font-size: 35px;
+  margin-top: -5px;
 }
 
 .cards-game-container {

@@ -22,6 +22,7 @@ export default {
 
     };
   },
+  props:["levelComplete"],
  watch: {
     isRunning(value) {
       if (value) {
@@ -36,6 +37,9 @@ export default {
         if (value > 0 && this.isRunning) {
           setTimeout(() => {
             this.time--;
+            if(this.levelComplete){
+              this.stopTimer();
+            }
             if (this.time === 0) {
               this.$bvModal.show("timeup");
             }
