@@ -2,19 +2,22 @@
   <div>
     <b-modal
       :body-bg-variant="bgVariant"
-      id="cerrar-sesion"
+      id="timeup"
       class="logout-modal"
-      v-model="modalShow"
+      v-model="modalTimeShow"
       hide-footer
       hide-header
+      no-close-on-esc
+      no-close-on-backdrop
     >
       <div class="modal-container">
         <div class="header-modal">
-          <h2>Desea cerrar sesión?</h2>
+          <h2 class="text-center">Se acabó el tiempo!</h2>
+          <h3 class="text-center">Deseas volver a intentarlo?</h3>
         </div>
         <div class="modal-options">
-          <button class="modalBtn" @click="logout">Si</button>
-          <button class="modalBtn" @click="modalShow = !modalShow">No</button>
+          <button class="modalBtn" @click="resetGame">Si</button>
+          <button class="modalBtn" @click="redirect">No</button>
         </div>
       </div>
     </b-modal>
@@ -23,32 +26,33 @@
 
 <script>
 export default {
-  name: "LogoutModal",
+  name: "quit-game",
   data() {
     return {
       bgVariant: "dark",
-      modalShow: false
+      modalTimeShow: false
     };
   },
-  //  props: ["modalShow"],
 
   methods: {
-    logout() {
+    resetGame() {
       this.$store.commit("changeLoading", true);
       try {
-        localStorage.clear();
-        this.$store.commit("loggedUser", false);
-        this.$router.push("/");
+          setTimeout(() => {
+              window.location.reload()
+          }, 3000);
         this.$store.commit("changeLoading", false);
       } catch (error) {
-        this.$store.commit("loggedUser", false);
+        this.$store.commit("changeLoading", false);
       }
     },
+    redirect(){
+        this.$router.push('/home')
+    }
   },
 };
 </script>
 <style scoped>
-
 .modalBtn {
   margin: 0px 20px;
   padding: 2px 20px;
@@ -71,11 +75,10 @@ export default {
   justify-content: center;
   border-radius: 49px;
   background: #212529;
- 
 }
-h2 {
+h2, h3 {
   color: #a0a0a0;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   font-size: 30px;
 }
 </style>

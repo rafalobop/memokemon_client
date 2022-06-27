@@ -2,7 +2,7 @@
   <div>
     <b-modal
       :body-bg-variant="bgVariant"
-      id="cerrar-sesion"
+      id="quit-game"
       class="logout-modal"
       v-model="modalShow"
       hide-footer
@@ -10,10 +10,10 @@
     >
       <div class="modal-container">
         <div class="header-modal">
-          <h2>Desea cerrar sesión?</h2>
+          <h2 class="text-center">Se perderá todo el progreso. Desea salir de la partida?</h2>
         </div>
         <div class="modal-options">
-          <button class="modalBtn" @click="logout">Si</button>
+          <button class="modalBtn" @click="exitGame">Si</button>
           <button class="modalBtn" @click="modalShow = !modalShow">No</button>
         </div>
       </div>
@@ -23,32 +23,29 @@
 
 <script>
 export default {
-  name: "LogoutModal",
+  name: "quit-game",
   data() {
     return {
       bgVariant: "dark",
       modalShow: false
     };
   },
-  //  props: ["modalShow"],
+  //props: ["modalShow"],
 
   methods: {
-    logout() {
+    exitGame() {
       this.$store.commit("changeLoading", true);
       try {
-        localStorage.clear();
-        this.$store.commit("loggedUser", false);
-        this.$router.push("/");
+        this.$router.push("/home");
         this.$store.commit("changeLoading", false);
       } catch (error) {
-        this.$store.commit("loggedUser", false);
+        this.$store.commit("changeLoading", false);
       }
     },
   },
 };
 </script>
 <style scoped>
-
 .modalBtn {
   margin: 0px 20px;
   padding: 2px 20px;
@@ -71,7 +68,6 @@ export default {
   justify-content: center;
   border-radius: 49px;
   background: #212529;
- 
 }
 h2 {
   color: #a0a0a0;

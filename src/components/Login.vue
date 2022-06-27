@@ -218,7 +218,6 @@ export default {
         try {
           const resp = await axios(config);
           if (resp.data.code === 2) {
-            await this.loadCardsInfo()
             localStorage.setItem("user", JSON.stringify(resp.data.user));
             localStorage.setItem("token", resp.data.token);
             localStorage.setItem('gameId', resp.data.user.gamesId)
@@ -332,53 +331,7 @@ export default {
       }
       return false;
     },
-     async loadCardsInfo() {
-      this.$store.commit("changeLoading", true);
-
-      const config = {
-        method: "get",
-        url: "https://pokeapi.co/api/v2/pokemon/?limit=150&offset=0.",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      try {
-        const resp = await axios(config);
-        if (resp.status === 200) {
-          const pokemons = resp.data.results;
-          pokemons.forEach(async (card, index) => {
-            const respuesta = await axios({
-              method: "get",
-              url: `${card.url}`,
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
-            if(respuesta.status === 200){
-              this.cards.push({
-                name: card.name,
-                img: respuesta.data.sprites.other.home.front_default,
-                pos: index
-              })
-              this.$store.commit('setCards', this.cards)
-              this.$store.commit("changeLoading", false);
-            }
-          });
-          return this.cards
-        } else {
-          this.$store.commit("changeLoading", false);
-          this.errorToast(
-            "Hubo un error al cargar la información, intente nuevamente."
-          );
-        }
-      } catch (error) {
-        console.log("error", error);
-        this.$store.commit("changeLoading", false);
-        this.errorToast(
-          "Hubo un error al cargar la información, intente nuevamente."
-        );
-      }
-    },
+    
     successToast(msg) {
       this.$toast.success(msg, {
         position: "top-right",

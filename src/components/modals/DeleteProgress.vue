@@ -22,29 +22,82 @@
 </template>
 
 <script>
+import {backendUrl} from '../../config/index'
+import axios from 'axios'
 export default {
   name: "RestoreProgress",
   data() {
     return {
       bgVariant: "dark",
+      modalShow: false
     };
   },
-  props: ["deleteProgress", "modalShow"],
+  methods:{
+    async deleteProgress() {
 
-  methods: {
-    /* logout() {
+      const token = localStorage.getItem("token");
+      const id = localStorage.getItem("gameId");
       this.$store.commit("changeLoading", true);
+      const config = {
+        method: "delete",
+        url: `${backendUrl}/games/deleteProgress/${id}`,
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
+      };
       try {
-        localStorage.clear();
-        this.$store.commit("loggedUser", false);
-        this.$router.push("/");
-        this.$store.commit("changeLoading", false);
+        const resp = await axios(config);
+        if (resp.data.code === 2) {
+          this.successToast(resp.data.msg);
+          this.$store.commit("changeLoading", false);
+          const userResp = await axios({
+            method: "get",
+            url: `${backendUrl}/users/getUserInfo/${id}`,
+            headers: {
+              "auth-token": token,
+              "Content-Type": "application/json",
+            },
+          });
+          try {
+            if (userResp.data.code == 2) {
+              this.$store.commit("changeLoading", false);
+              this.successToast("Usuario actualizado correctamente");
+              localStorage.setItem('user', JSON.stringify(userResp.data.user))
+              this.$store.commit('userLog', userResp.data.user)
+            }else{
+              this.modalShow = !this.modalShow
+            }
+          } catch (error) {
+            this.errorToast(resp.data.msg);
+            this.modalShow = !this.modalShow
+            this.$store.commit("changeLoading", false);
+          }
+        } else {
+          this.modalShow = !this.modalShow
+          this.errorToast(resp.data.msg);
+          this.$store.commit("changeLoading", false);
+        }
       } catch (error) {
-        this.$store.commit("loggedUser", false);
-        console.log("error");
+        this.modalShow = !this.modalShow
+        this.$store.commit("changeLoading", false);
+        this.errorToast(error.response.data.msg);
       }
-    }, */
-  },
+    },
+    errorToast(msg) {
+      this.$toast.error(msg, {
+        position: "top-right",
+        hideProgressBar: true,
+      });
+    },
+    successToast(msg) {
+      this.$toast.success(msg, {
+        position: "top-right",
+        hideProgressBar: true,
+      });
+    },
+  }
+
 };
 </script>
 <style scoped>

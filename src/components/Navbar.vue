@@ -19,7 +19,7 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <LogoutModal :modalShow="modalShow"/>
+    <LogoutModal />
   </div>
 </template>
 <script>

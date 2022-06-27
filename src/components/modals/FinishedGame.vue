@@ -2,19 +2,22 @@
   <div>
     <b-modal
       :body-bg-variant="bgVariant"
-      id="cerrar-sesion"
+      id="finish-game"
       class="logout-modal"
       v-model="modalShow"
       hide-footer
       hide-header
+      no-close-on-esc
+      no-close-on-backdrop
     >
       <div class="modal-container">
         <div class="header-modal">
-          <h2>Desea cerrar sesión?</h2>
+          <h2 class="text-center">Has completado el nivel!</h2>
+          <h4 class="text-center">Tu puntaje</h4>
         </div>
         <div class="modal-options">
-          <button class="modalBtn" @click="logout">Si</button>
-          <button class="modalBtn" @click="modalShow = !modalShow">No</button>
+          <button class="modalBtn" @click="continueGame">Continuar</button>
+          <button class="modalBtn" @click="quitGame">Salir del juego</button>
         </div>
       </div>
     </b-modal>
@@ -23,32 +26,38 @@
 
 <script>
 export default {
-  name: "LogoutModal",
+  name: "quit-game",
   data() {
     return {
       bgVariant: "dark",
       modalShow: false
     };
   },
-  //  props: ["modalShow"],
+  props: ["levelComplete"],
 
   methods: {
-    logout() {
+    continueGame() {
       this.$store.commit("changeLoading", true);
       try {
-        localStorage.clear();
-        this.$store.commit("loggedUser", false);
-        this.$router.push("/");
+        this.$router.go(this.$router.currentRoute)
         this.$store.commit("changeLoading", false);
       } catch (error) {
-        this.$store.commit("loggedUser", false);
+        this.$store.commit("changeLoading", false);
       }
     },
+    quitGame(){
+         this.$store.commit("changeLoading", true);
+      try {
+        this.$router.push('/home')
+        this.$store.commit("changeLoading", false);
+      } catch (error) {
+        this.$store.commit("changeLoading", false);
+      }
+    }
   },
 };
 </script>
 <style scoped>
-
 .modalBtn {
   margin: 0px 20px;
   padding: 2px 20px;
@@ -71,11 +80,15 @@ export default {
   justify-content: center;
   border-radius: 49px;
   background: #212529;
- 
 }
 h2 {
   color: #a0a0a0;
   margin-bottom: 20px;
   font-size: 30px;
+}
+h4{
+color: #a0a0a0;
+  margin-bottom: 20px;
+  font-size: 20px;
 }
 </style>

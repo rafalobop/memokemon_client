@@ -5,6 +5,7 @@ import Home from '../views/Home'
 import Ranking from '../views/Ranking'
 import Cards from '../views/Cards'
 import NewGame from '../views/NewGame'
+import ErrorPage from '../views/ErrorPage'
 
 Vue.use(VueRouter);
 const routes = [
@@ -16,7 +17,8 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: Home
+    component: Home,
+    props:true
   },
   {
     path: '/ranking',
@@ -31,56 +33,14 @@ const routes = [
   {
     path:'/newGame',
     name: 'NewGame',
-    component: NewGame
+    component: NewGame,
+    props:true
+  },
+  {
+    path:'*',
+    name:'Error',
+    component: ErrorPage
   }
-
-  /* {
-    path: '/home',
-    component: layout,
-    children: [
-      {
-        name: 'import',
-        path: '/import-file',
-        component: importFile,
-      },
- 
-      {
-        name: 'user',
-        path: '/user',
-        component: user,
-      },
-      {
-        name: 'Proyect',
-        path: '/proyect',
-        component: proyect,
-      },
-      {
-        name: 'Graphic',
-        path: '/graphic',
-        component: graphic,
-      },
-      {
-        name: 'DynamicTable',
-        path: '/dynamic-table',
-        component: dynamicTable,
-      },
-      {
-        name: 'ProyectUser',
-        path: '/proyect-user',
-        component: proyectUser,
-      },
-      {
-        name: 'HourTasks',
-        path: '/tasks',
-        component: hourTasks,
-      },
-      {
-        name: '',
-        path: '/graphic-user',
-        component: GraphicUser,
-      },
-    ],
-  }, */
 ]
 
 const router = new VueRouter({
