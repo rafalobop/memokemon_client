@@ -8,10 +8,10 @@
       <b-collapse id="nav-collapse" class="justify-content-end p-4" is-nav>
         <b-navbar-nav class="flex-end mr-0">
           <b-nav-item
-            ><router-link class="navbutton" to="/ranking">Ranking</router-link>
+            ><router-link class="navbutton" to="/home">Home</router-link>
           </b-nav-item>
           <b-nav-item
-            ><router-link class="navbutton" to="/cards">Cards</router-link>
+            ><router-link class="navbutton" to="/ranking">Ranking</router-link>
           </b-nav-item>
           <b-nav-item class="logoutbtn" v-b-modal.cerrar-sesion @click="modalShow = !modalShow"
             >Cerrar sesión</b-nav-item

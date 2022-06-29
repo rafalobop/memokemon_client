@@ -13,7 +13,7 @@
       <div class="modal-container">
         <div class="header-modal">
           <h2 class="text-center">Has completado el nivel!</h2>
-          <h4 class="text-center">Tu puntaje</h4>
+          <h4 class="text-center">Tu puntaje: {{scoreTotal}}</h4>
         </div>
         <div class="modal-options">
           <button class="modalBtn" @click="continueGame">Continuar</button>
@@ -33,7 +33,7 @@ export default {
       modalShow: false
     };
   },
-  props: ["levelComplete"],
+  props: ["levelComplete", "scoreTotal"],
 
   methods: {
     continueGame() {

@@ -17,7 +17,7 @@
       <div class="cards-game-container">
         <Card
           v-for="(card, index) in levelCards"
-          @toggleCard="flipCard(card, index)"
+          @toggleCard="flipCard(card)"
           :key="index"
           :card="card"
           :isGame="isGame"
@@ -183,10 +183,10 @@ export default {
       const cardsOfLevel = await generateLevel(newCardsArray, this.level);
       const cardsOfLevelRepeat = [...cardsOfLevel];
       const cardsToCharge = [...cardsOfLevel, ...cardsOfLevelRepeat];
-      this.levelCards = cardsToCharge.map((card) => {
+      const sortedCards = cardsToCharge.sort(()=> Math.random()-0.5)
+      this.levelCards = sortedCards.map((card) => {
         return { ...card, flipped: false, acerted: false };
       });
-      console.log("se carga el nivel nuevamnete", this.user.progress.levelActual);
       this.isGame = true;
     },
     quitGame() {

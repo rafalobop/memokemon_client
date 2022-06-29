@@ -51,6 +51,15 @@ html{
 #loading-logo {
   width: 50%;
 }
+#loadingScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  background-color: #000000c0;
+}
 #loading-bg {
   width: 100%;
   height: 100%;
@@ -80,7 +89,7 @@ html{
   width: 100%;
   height: 100%;
   border: 3px solid transparent;
-  border-left: 3px solid rgba(0, 26, 87, 1);
+  border-left: 3px solid #fff;
   border-radius: 50%;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -97,7 +106,7 @@ html{
   width: 100%;
   height: 100%;
   border: 3px solid transparent;
-  border-left: 3px solid rgba(0, 26, 87, 1);
+  border-left: 3px solid #fff;
   -webkit-animation: rotateOpacity 1s ease infinite 0.2s;
   animation: rotateOpacity 1s ease infinite 0.2s;
   border-radius: 50%;

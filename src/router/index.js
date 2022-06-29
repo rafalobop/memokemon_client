@@ -3,7 +3,6 @@ import VueRouter from 'vue-router';
 import Login from '../components/Login'
 import Home from '../views/Home'
 import Ranking from '../views/Ranking'
-import Cards from '../views/Cards'
 import NewGame from '../views/NewGame'
 import ErrorPage from '../views/ErrorPage'
 
@@ -25,11 +24,7 @@ const routes = [
     name: 'Ranking',
     component: Ranking
   },
-  {
-    path:'/cards',
-    name:'Cards',
-    component: Cards
-  },
+
   {
     path:'/newGame',
     name: 'NewGame',
